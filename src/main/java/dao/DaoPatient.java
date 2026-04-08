@@ -7,19 +7,18 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import model.entities.Therapist;
+import model.entities.Patient;
 import utilitaires.SingletonConnexion;
 
-public class DaoTherapist {
+public class DaoPatient {
 	private Connection con = SingletonConnexion.getConnection();
 
-	public boolean addTherapist(Therapist therapist) {
-        String sql = "INSERT INTO therapists (name, surname, speciality, email) VALUES (?, ?, ?, ?)";
+	public boolean addPatient(Patient patient) {
+        String sql = "INSERT INTO patients (name, surname, phone) VALUES (?, ?, ?)";
         try (PreparedStatement ps = con.prepareStatement(sql)) {
-            ps.setString(1, therapist.getName());
-            ps.setString(2, therapist.getSurname());
-            ps.setString(3, therapist.getSpeciality());
-            ps.setString(4, therapist.getEmail());
+            ps.setString(1, patient.getName());
+            ps.setString(2, patient.getSurname());
+            ps.setString(3, patient.getPhone());
 
             int rowsInserted = ps.executeUpdate();
             return rowsInserted > 0; // true if at least one row was inserted
@@ -30,38 +29,36 @@ public class DaoTherapist {
 
 	}
 
-    public List<Therapist> getAllTherapists() {
-        List<Therapist> therapists = new ArrayList<>();
-        String sql = "SELECT * FROM therapists";
+    public List<Patient> getAllPatients() {
+        List<Patient> patients = new ArrayList<>();
+        String sql = "SELECT * FROM patients";
         try (PreparedStatement ps = con.prepareStatement(sql);
              ResultSet rs = ps.executeQuery()) {
             while (rs.next()) {
-                Therapist t = new Therapist();
-                t.setId(rs.getInt("id"));
-                t.setName(rs.getString("name"));
-                t.setSurname(rs.getString("surname"));
-                t.setSpeciality(rs.getString("speciality"));
-                t.setEmail(rs.getString("email"));
-                therapists.add(t);
+                Patient p = new Patient();
+                p.setId(rs.getInt("id"));
+                p.setName(rs.getString("name"));
+                p.setSurname(rs.getString("surname"));
+                p.setPhone(rs.getString("phone"));
+                patients.add(p);
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return therapists;
+        return patients;
     }
 
-    public Therapist getTherapistById(int id) {
-        String sql = "SELECT * FROM therapists WHERE id = ?";
+    public Patient getPatientById(int id) {
+        String sql = "SELECT * FROM patients WHERE id = ?";
         try (PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setInt(1, id);
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
-                    return new Therapist(
+                    return new Patient(
                         rs.getInt("id"),
                         rs.getString("name"),
                         rs.getString("surname"),
-                        rs.getString("speciality"),
-                        rs.getString("email")
+                        rs.getString("phone")
                     );
                 }
             }
@@ -71,14 +68,13 @@ public class DaoTherapist {
         return null;
     }
 
-    public boolean updateTherapist(Therapist therapist) {
-        String sql = "UPDATE therapists SET name = ?, surname = ?, speciality = ?, email = ? WHERE id = ?";
+    public boolean updatePatient(Patient patient) {
+        String sql = "UPDATE patients SET name = ?, surname = ?, phone = ? WHERE id = ?";
         try (PreparedStatement ps = con.prepareStatement(sql)) {
-            ps.setString(1, therapist.getName());
-            ps.setString(2, therapist.getSurname());
-            ps.setString(3, therapist.getSpeciality());
-            ps.setString(4, therapist.getEmail());
-            ps.setInt(5, therapist.getId());
+            ps.setString(1, patient.getName());
+            ps.setString(2, patient.getSurname());
+            ps.setString(3, patient.getPhone());
+            ps.setInt(4, patient.getId());
             return ps.executeUpdate() > 0;
         } catch (SQLException e) {
             e.printStackTrace();
@@ -86,8 +82,8 @@ public class DaoTherapist {
         }
     }
 
-    public boolean deleteTherapist(int id) {
-        String sql = "DELETE FROM therapists WHERE id = ?";
+    public boolean deletePatient(int id) {
+        String sql = "DELETE FROM patients WHERE id = ?";
         try (PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setInt(1, id);
             return ps.executeUpdate() > 0;

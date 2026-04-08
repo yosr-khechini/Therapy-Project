@@ -8,7 +8,7 @@ import java.sql.SQLException;
 import model.entities.Administrateur;
 import utilitaires.SingletonConnexion; 
 
-public class DaoAdmin {
+public class DaoAdmin{
 	private Connection con = SingletonConnexion.getConnection();
 
 	public boolean findAdmin(Administrateur admin) throws SQLException {

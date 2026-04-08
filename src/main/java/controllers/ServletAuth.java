@@ -39,7 +39,7 @@ public class ServletAuth extends HttpServlet {
 		
 		try {
 			if (dao.findAdmin(modeladmin.getAdmin())) {
-				request.setAttribute("nom", login);
+				request.setAttribute("name", login);
 				request.getRequestDispatcher("welcome.jsp").forward(request, response);
 			} else {
 				response.sendRedirect("login.jsp");
